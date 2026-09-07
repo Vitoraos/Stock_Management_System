@@ -22,7 +22,7 @@ export async function listProducts(filters?: {
     filters = { ...filters, onlyActive: true };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   let query = supabase
     .from("products")
     .select("*, category:categories(name)", { count: "exact" });
@@ -51,7 +51,7 @@ export async function getProductById(id: string) {
   if (authError) return { error: authError };
   if (!currentUser) return { error: "Unauthorized" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -89,7 +89,7 @@ export async function createProduct(
   if (!trimmedName) return { error: "Product name is required" };
   if (trimmedName.length > 100) return { error: "Name is too long" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("products")
     .insert({
@@ -131,7 +131,7 @@ export async function updateProduct(
     return { error: "Manager cannot change quantity directly" };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("products")
     .update({ ...updates, updated_at: new Date().toISOString() })
@@ -150,7 +150,7 @@ export async function deleteProduct(id: string) {
     return { error: "Only owner or manager can delete products" };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   // Soft delete: set is_active = false
   const { data, error } = await supabase
     .from("products")
@@ -170,7 +170,7 @@ export async function listLowStock() {
     return { error: "Only owner or manager can view low stock" };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
    const { data, error } = await supabase
     .from("products")
     .select("*")
