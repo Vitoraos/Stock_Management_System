@@ -59,9 +59,13 @@ export async function getProductById(id: string) {
     .single();
   if (error) return { error: error.message };
   // If product is inactive and requester is not owner/manager
-  if (!data?.is_active && !["owner", "manager"].includes(currentUser.role)) {
-    return { error: "Product not found" };
-  }
+  if (
+  !data?.is_active &&
+  currentUser.role !== "owner" &&
+  currentUser.role !== "manager"
+) {
+  return { error: "Product not found" };
+}
   return { success: true, product: data };
 }
 
