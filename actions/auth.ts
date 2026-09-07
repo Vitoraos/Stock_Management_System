@@ -326,7 +326,7 @@ export async function listUsers() {
     };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const {
     data,
@@ -392,7 +392,7 @@ export async function updateProfileRole(
     };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const {
     data,
@@ -435,7 +435,7 @@ export async function updateProfileRole(
 // LOGOUT
 // ============================================================
 export async function logout() {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   await supabase.auth.signOut();
 
