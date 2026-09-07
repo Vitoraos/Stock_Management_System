@@ -45,12 +45,11 @@ export async function getCurrentUser() {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    return null;
-  }
-
-  return user;
+  return {
+    user,
+    error: error?.message ?? null,
+  };
 }
 
-// Backwards compatibility for any files still importing createClient
+// Backwards compatibility
 export const createClient = createServerClient;
