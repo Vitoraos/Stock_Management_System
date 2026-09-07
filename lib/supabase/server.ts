@@ -1,10 +1,13 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import {
+  createServerClient as createSupabaseServerClient,
+  type CookieOptions,
+} from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function createClient() {
+export async function createServerClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  return createSupabaseServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -33,3 +36,21 @@ export async function createClient() {
     }
   );
 }
+
+export async function getCurrentUser() {
+  const supabase = await createServerClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return user;
+}
+
+// Backwards compatibility for any files still importing createClient
+export const createClient = createServerClient;
