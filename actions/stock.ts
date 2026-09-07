@@ -16,7 +16,7 @@ export async function stockIn(
   }
   if (qty <= 0) return { error: "Quantity must be positive" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const { data: product, error: fetchError } = await supabase
     .from("products")
