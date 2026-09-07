@@ -35,7 +35,7 @@ export async function getSaleById(saleId: string) {
   if (authError) return { error: authError };
   if (!currentUser) return { error: "Unauthorized" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const { data: sale, error: saleError } = await supabase
     .from("sales")
@@ -72,7 +72,7 @@ export async function listSales(filters?: {
   if (authError) return { error: authError };
   if (!currentUser) return { error: "Unauthorized" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   let query = supabase
     .from("sales")
     .select("*, sale_items(*), seller:profiles(full_name)", { count: "exact" })
@@ -108,7 +108,7 @@ export async function createSale(
   }
   if (!items.length) return { error: "Sale must have at least one item" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   let totalAmount = 0;
   const validatedItems: { productId: string; qty: number; unitPrice: number; lineTotal: number }[] = [];
