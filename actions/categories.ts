@@ -13,7 +13,7 @@ export async function listCategories(): Promise<{
   if (authError) return { error: authError, categories: [] };
   if (!user) return { error: "Unauthorized", categories: [] };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data, error } = await supabase
     .from("categories")
     .select("*")
@@ -38,7 +38,7 @@ export async function createCategory(
   if (!trimmed) return { error: "Category name is required" };
   if (trimmed.length > 50) return { error: "Category name is too long" };
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   // Prevent duplicate (case-insensitive)
   const { data: existing } = await supabase
@@ -77,7 +77,7 @@ export async function deleteCategory(
     return { error: "Only the owner can delete categories" };
   }
 
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   // Check if any products use this category
   const { count } = await supabase
